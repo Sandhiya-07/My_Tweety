@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+
+  <!-- Header -->
+  <header class="py-5 mb-5" style="background-image: url('static/images/banner_no_logo.png'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+    <div class="container h-100">
+      <div class="row h-100 align-items-center">
+        <div class="col-lg-12">
+          <h1 class="display-4 text-white mt-5 mb-2">RESULTS FOR : <b>{{input_hashtag}}</b></h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+
+<!-- Container for First Figures and Chart -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mb-2">
+        <h2>Sentiment Analysis</h2>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Column 1 -->
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Pulled Tweets</h5>
+                <h5 class="card-text">{{input_num_terms}}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Sentiment Score</h5>
+                <h5 class="card-text">{{sentiment_average}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Max Tweet Score</h5>
+                <h5 class="card-text">{{max_sentiment}}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Min Tweet Score</h5>
+                <h5 class="card-text">{{min_sentiment}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Time Span (Oldest to newest Tweet)</h5>
+                <h5 class="card-text">{{tweet_duration}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column 2 -->
+      <div class="col-md-5 mb-4">
+        <div class="card border-0">
+          <img class="card-img-top" src="data:image/png;base64,{{ chart|safe }}">
+        </div>
+      </div>
+      <!-- Column 3 -->
+      <div class="col-md-2 mb-4">
+        <div class ="row">
+          <div class="col-md-12 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Positive</h5>
+                <h5 class="card-text">{{count_positive}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class ="row">
+          <div class="col-md-12 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Neutral</h5>
+                <h5 class="card-text">{{count_neutral}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class ="row">
+          <div class="col-md-12 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Negative</h5>
+                <h5 class="card-text">{{count_negative}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Container for Boxplot and Distribution -->
+  <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Sentiment Boxplot</h2>
+          <hr>
+          <div class="col-md-6 mb-4">
+            <div class="card border-0" style="width: 30rem;">
+              <img class="card img-top border-0" src="data:image/png;base64,{{ boxplot|safe }}">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h2>Sentiment Distribution</h2>
+          <hr>
+          <div class="col-md-6 mb-4">
+            <div class="card border-0" style="width: 30rem;">
+              <img class="card img-top border-0" src="data:image/png;base64,{{ distribution|safe }}">
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+<!-- Container for Sentiment Explanation and User Table -->
+<div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Score Range</h2>
+        <hr>
+        <div class="card border-0 mb-5 d-flex justify-content-center">
+          <p></p> <!-- Spacer -->
+          <h5 class="card-text">Overrall Range -1 and +1:</h5>
+          <p></p> <!-- Spacer -->
+          <h5 class="card-text">- Range Between +1 and +0.05 == Positive.</h5><br>
+          <p></p> <!-- Spacer -->
+          <h5 class="card-text">- Range Between +0.05 and -0.05 == Neutral.</h5><br>
+          <p></p> <!-- Spacer -->
+          <h5 class="card-text">- Range Between -0.05 and -1 == Negative.</h5><br>
+          <p></p> <!-- Spacer -->
+          <h5>Total sentiment score is {{sentiment_average}}, which means that people on Twitter are currently using {{sentiment_describe}} words associated with {{input_hashtag}}.</h5>
+        </div>
+  	  </div>
+      <div class="col-md-6">
+        <h2>Tweeted Users</h2>
+        <hr>
+        <div class="card border-0 mb-5">
+          <div class="text-justify">
+            {{ df_top_html | safe }}
+          </div>
+        </div>
+      </div>
+  	</div>
+</div>
+
+<!-- Container for Word/Hashtag-Cloud -->
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 mb-5">
+        <h2>Most common words in the tweets</h2>
+        <hr>
+        <div class="card border">
+          <img class="card-img-bottom" src="data:image/png;base64,{{ word_cloud|safe }}">
+		</div>
+  	  </div>
+      <div class="col-md-6 mb-5">
+        <h2>Most used #Hashtags in the tweets</h2>
+        <hr>
+        <div class="card border">
+          <img class="card-img-bottom" src="data:image/png;base64,{{ hashtag_cloud|safe }}">
+        </div>
+  	  </div>
+    </div>
+</div>
+
+<!-- Container for Raw Data-->
+<div class="container">
+    <div class="row">
+      <div class="col-md-11">
+        <h2>Pulled Tweets</h2>
+        <hr>
+  	  </div>
+      <div class="col-md-12 mb-3">
+        <p>Tweets can be downloaded as an Excel File</p>
+        <div class="row">
+          <div class="col-md-2 mb-3">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#showcase">Expand / Collapse</button>
+          </div>
+          <div class="col-md-2 mb-3">
+            <form method="get" action="{% static '/xlsx/raw_tweets.xlsx' %}">
+              <button type="submit" class="btn btn-primary">Download Excel</button>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-5">
+            <div id="showcase" class="collapse">
+              {{ df_short_html | safe }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content%}
